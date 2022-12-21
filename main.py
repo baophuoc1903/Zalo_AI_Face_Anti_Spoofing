@@ -18,7 +18,7 @@ def args_parser():
     parser.add_argument('--data_path', type=str, default='./dataset/train/videos', help="Path to dataset directory")
     parser.add_argument('--df_path', type=str, default='./dataset/train/label_sr20_frame_10folds.csv', help="Path to dataset directory")
     parser.add_argument('--predict_path', type=str, default='./dataset/public/videos', help="Path to dataset directory")
-    parser.add_argument('--sampling_frame_rate', type=int, default=20, help="Sampling frame to predict")
+    parser.add_argument('--sampling_frame_rate', type=int, default=1, help="Sampling frame to predict")
     parser.add_argument('--predict_output_path', type=str, default='./predict', help="Output predict folder")
     parser.add_argument('--image_size', type=int, default=224, help="Input image size")
 
@@ -30,7 +30,7 @@ def args_parser():
     parser.add_argument('--soft_label', type=float, default=0.1, help="Soft label avoid overfitting")
     parser.add_argument('--gpu', action="store_false", help="Not using gpu?")
     parser.add_argument('--eff', action="store_true", help="Using efficientnet")
-    parser.add_argument('--kfold', type=int, default=5, help="Number of fold")
+    parser.add_argument('--kfold', type=int, default=10, help="Number of fold")
     parser.add_argument('--grad_clip', type=float, default=10.0, help="Gradient clipping")
 
     parser.add_argument('--batch_size', type=int, default=1, help="Batch size")
@@ -45,17 +45,14 @@ def args_parser():
 
 if __name__ == '__main__':
     hyps = args_parser()
-    # hyps.gpu=False
-    # hyps.batch_size=4
     print(hyps)
 
     df = pd.read_csv(hyps.df_path)
     model_train = Training(hyps)
-    # for fold in range(hyps.kfold):
-    fold = hyps.kfold
-    print(f"============== FOLD NUMBER {fold+1} ===============")
-    train_df = df[df['fold'] != fold].reset_index(drop=True)
-    valid_df = df[df['fold'] == fold].reset_index(drop=True)
-    model_train.next_fold(train_df, valid_df, fold)
-    model_train.train()
-    print(f"=================== DONE =========================")
+    for fold in range(hyps.kfold):
+        print(f"============== FOLD NUMBER {fold+1} ===============")
+        train_df = df[df['fold'] != fold].reset_index(drop=True)
+        valid_df = df[df['fold'] == fold].reset_index(drop=True)
+        model_train.next_fold(train_df, valid_df, fold)
+        model_train.train()
+        print(f"=================== DONE =========================")
