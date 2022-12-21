@@ -1,8 +1,8 @@
-# Sample model for Zalo AI 2022 liveness challenge
+# Sample model for Zalo AI 2022: Liveness Detection challenge
 
 ## About this project:
 
-- A Solution for Zalo AI Challenge 2022: [Liveness Detection]("https://challenge.zalo.ai/portal/liveness-detection")
+- A Solution for Zalo AI Challenge 2022: [Liveness Detection](https://challenge.zalo.ai/portal/liveness-detection)
 - Approach: EfficientNet-b0, 10-fold cross validation
 
 ## How to run:
